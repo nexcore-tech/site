@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INNOVA CORE | Tecnología para la Operación Real</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #0A58CA;
+            --brand-orange: #FF6B00;
+            --brand-white: #FFFFFF;
+            --brand-light: #F8FAFC;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--brand-white);
+            color: #1E293B;
+            overflow-x: hidden;
+        }
+
+        /* Menú Dinámico y Armónico */
+        .nav-item {
+            position: relative;
+            padding: 0.5rem 1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #475569;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .nav-item:hover {
+            color: var(--brand-blue);
+            transform: translateY(-1px);
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 6px;
+            background-color: var(--brand-orange);
+            border-radius: 99px;
+            transform: translateX(-50%);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            opacity: 0;
+        }
+
+        .nav-item:hover::before {
+            width: 20px;
+            opacity: 1;
+            bottom: -4px;
+        }
+
+        /* Botón de Cotizar Dinámico */
+        .btn-quote {
+            background: linear-gradient(135deg, var(--brand-blue) 0%, #0044aa 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn-quote::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: 0.5s;
+            pointer-events: none;
+        }
+
+        .btn-quote:hover {
+            box-shadow: 0 10px 20px -5px rgba(10, 88, 202, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-quote:hover::after {
+            left: 120%;
+        }
+
+        .section-view {
+            display: none;
+            animation: fadeIn 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .section-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .orange-gradient-text {
+            background: linear-gradient(90deg, #FF6B00, #FF9E00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tech-card {
+            background: white;
+            border: 1px solid #E2E8F0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tech-card:hover {
+            border-color: var(--brand-orange);
+            box-shadow: 0 20px 25px -5px rgba(255, 107, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .btn-primary {
+            background-color: var(--brand-blue);
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            border: 2px solid var(--brand-orange);
+            color: var(--brand-orange);
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--brand-orange);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+
+    <!-- Header / Nav -->
+    <nav class="fixed w-full z-50 bg-white/90 backdrop-blur-xl border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
+            <div class="flex items-center cursor-pointer" onclick="showSection('inicio')">
+                <!-- Logo corporativo -->
+                <img src="https://res.cloudinary.com/dway4iqeh/image/upload/v1766758564/nexcore3_uvo6ca.png" alt="Logo Innova Core" class="h-32 md:h-40 w-auto transition-all duration-500 hover:scale-105">
+            </div>
+            
+            <!-- Desktop Menu Armónico -->
+            <div class="hidden md:flex items-center gap-4">
+                <div class="flex items-center bg-slate-50/50 rounded-full px-2 py-1 border border-slate-100 mr-4">
+                    <button onclick="showSection('inicio')" class="nav-item">Inicio</button>
+                    <button onclick="showSection('soluciones')" class="nav-item">Soluciones</button>
+                    <button onclick="showSection('nosotros')" class="nav-item">Nosotros</button>
+                </div>
+                <button onclick="showSection('contacto')" class="btn-quote text-white px-8 py-3 rounded-full font-bold text-sm shadow-lg">
+                    Cotizar Proyecto
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden text-slate-900 p-2" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 flex flex-col p-6 gap-4 md:hidden shadow-xl">
+            <button onclick="showSection('inicio'); toggleMobileMenu()" class="text-left font-bold text-slate-700 py-2 border-b border-slate-50">Inicio</button>
+            <button onclick="showSection('soluciones'); toggleMobileMenu()" class="text-left font-bold text-slate-700 py-2 border-b border-slate-50">Soluciones</button>
+            <button onclick="showSection('nosotros'); toggleMobileMenu()" class="text-left font-bold text-slate-700 py-2 border-b border-slate-50">Nosotros</button>
+            <button onclick="showSection('contacto'); toggleMobileMenu()" class="text-center bg-blue-600 text-white font-bold py-4 rounded-xl mt-2">Cotizar Proyecto</button>
+        </div>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="pt-40 min-h-screen">
+
+        <!-- VENTANA: INICIO -->
+        <section id="inicio" class="section-view active">
+            <div class="max-w-7xl mx-auto px-6 py-12 md:py-20 flex flex-col md:flex-row items-center gap-12">
+                <div class="flex-1 space-y-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-100 text-orange-600 text-xs font-bold uppercase tracking-wider">
+                        <span class="flex h-2 w-2 rounded-full bg-orange-500 animate-ping"></span>
+                        Innovación aplicada a la operación
+                    </div>
+                    <h1 class="text-5xl md:text-7xl font-extrabold text-slate-900 leading-tight">
+                        Plataformas <br><span class="orange-gradient-text">Inteligentes</span> para empresas reales.
+                    </h1>
+                    <p class="text-lg text-slate-600 max-w-lg">
+                        Diseñamos sistemas a medida donde la precisión y el control son clave. Especialistas en automatización operativa y capacitación táctica.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="showSection('soluciones')" class="btn-primary text-white px-8 py-4 rounded-xl font-bold flex items-center gap-2 hover:shadow-xl hover:shadow-blue-500/20">
+                            Ver Soluciones <i class="fas fa-chevron-right text-xs"></i>
+                        </button>
+                        <button onclick="showSection('contacto')" class="btn-secondary px-8 py-4 rounded-xl font-bold">
+                            Hablar con un experto
+                        </button>
+                    </div>
+                </div>
+                <div class="flex-1 relative">
+                    <div class="absolute top-0 -right-20 w-72 h-72 bg-blue-400/10 blur-3xl rounded-full"></div>
+                    <div class="absolute bottom-0 -left-20 w-72 h-72 bg-orange-400/10 blur-3xl rounded-full"></div>
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" alt="Dashboard de tecnología" class="relative rounded-3xl shadow-2xl border-8 border-white">
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="max-w-7xl mx-auto px-6 py-12">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 p-10 bg-white rounded-3xl border border-slate-100 shadow-sm">
+                    <div class="text-center">
+                        <div class="text-3xl font-extrabold text-blue-600">100%</div>
+                        <div class="text-xs uppercase font-bold text-slate-400 mt-1">A medida</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-extrabold text-orange-500">24/7</div>
+                        <div class="text-xs uppercase font-bold text-slate-400 mt-1">Control Operativo</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-extrabold text-blue-600">Tactical</div>
+                        <div class="text-xs uppercase font-bold text-slate-400 mt-1">UX/UI Focus</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-extrabold text-orange-500">Scalable</div>
+                        <div class="text-xs uppercase font-bold text-slate-400 mt-1">Soluciones</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VENTANA: SOLUCIONES -->
+        <section id="soluciones" class="section-view px-6 py-12 md:py-20">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-extrabold text-slate-900 mb-4 italic">Nuestra Ingeniería Digital</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">No instalamos software genérico. Construimos el motor tecnológico que su empresa necesita para evolucionar.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Solución 1 -->
+                    <div class="tech-card p-8 rounded-3xl">
+                        <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-2xl mb-6">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Sistemas tipo ERP</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Modelos de negocio específicos adaptados a su flujo de trabajo real, sin funciones innecesarias.</p>
+                        <div class="mt-6 pt-6 border-t border-slate-100">
+                            <span class="text-orange-500 font-bold text-xs uppercase tracking-widest">Control Total</span>
+                        </div>
+                    </div>
+                    <!-- Solución 2 -->
+                    <div class="tech-card p-8 rounded-3xl">
+                        <div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-600 text-2xl mb-6">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Gamificación & Training</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Simuladores de toma de decisiones para guardias, supervisores y personal de operaciones críticas.</p>
+                        <div class="mt-6 pt-6 border-t border-slate-100">
+                            <span class="text-orange-500 font-bold text-xs uppercase tracking-widest">Capacitación Real</span>
+                        </div>
+                    </div>
+                    <!-- Solución 3 -->
+                    <div class="tech-card p-8 rounded-3xl">
+                        <div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 text-2xl mb-6">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Videovigilancia (CCTV)</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">Soluciones de simulación y formación técnica para centros de control y monitoreo de alta seguridad.</p>
+                        <div class="mt-6 pt-6 border-t border-slate-100">
+                            <span class="text-orange-500 font-bold text-xs uppercase tracking-widest">Seguridad Táctica</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VENTANA: NOSOTROS -->
+        <section id="nosotros" class="section-view px-6 py-12 md:py-20">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16">
+                <div class="flex-1">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800" alt="Reunión de equipo" class="rounded-3xl shadow-xl">
+                </div>
+                <div class="flex-1 space-y-6">
+                    <h2 class="text-4xl font-extrabold text-slate-900 leading-tight">Expertos en <br><span class="text-blue-600">Procesos Críticos</span></h2>
+                    <p class="text-slate-600 leading-relaxed">
+                        En **INNOVA CORE** entendemos que la tecnología es inútil si no se adapta a la operación. Contamos con amplia experiencia en sectores donde la precisión es la única opción: Seguridad Privada, Prevención de Riesgos y Gestión de Crisis.
+                    </p>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 text-orange-500"><i class="fas fa-check-double"></i></div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Enfoque Normativo</h4>
+                                <p class="text-sm text-slate-500">Nuestros desarrollos cumplen con las leyes y reglamentos vigentes de cada sector.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="mt-1 text-orange-500"><i class="fas fa-check-double"></i></div>
+                            <div>
+                                <h4 class="font-bold text-slate-800">Usabilidad Extrema</h4>
+                                <p class="text-sm text-slate-500">Interfaces limpias diseñadas para operar bajo presión.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VENTANA: CONTACTO -->
+        <section id="contacto" class="section-view px-6 py-12 md:py-20">
+            <div class="max-w-4xl mx-auto bg-white p-10 md:p-16 rounded-[3rem] shadow-2xl border border-slate-100 text-center">
+                <h2 class="text-4xl font-extrabold text-slate-900 mb-2 italic">¿Listos para el siguiente nivel?</h2>
+                <p class="text-slate-500 mb-12">Cuéntenos su desafío operativo y diseñaremos la plataforma para resolverlo.</p>
+                
+                <form id="contact-form" class="grid md:grid-cols-2 gap-6 text-left" onsubmit="handleContactSubmit(event)">
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase text-slate-400 ml-2">Nombre Completo</label>
+                        <input id="name" type="text" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-blue-500 outline-none transition">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold uppercase text-slate-400 ml-2">Email Corporativo</label>
+                        <input id="email" type="email" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-blue-500 outline-none transition">
+                    </div>
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-xs font-bold uppercase text-slate-400 ml-2">Descripción del Requerimiento</label>
+                        <textarea id="message" rows="4" required class="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:border-blue-500 outline-none transition" placeholder="¿Qué proceso desea automatizar o mejorar?"></textarea>
+                    </div>
+                    <button type="submit" class="md:col-span-2 bg-orange-500 hover:bg-orange-600 text-white font-extrabold py-5 rounded-2xl transition shadow-xl shadow-orange-500/20 uppercase tracking-widest">
+                        Solicitar Consultoría Técnica
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-100 py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+            <div class="flex flex-col items-center md:items-start gap-4">
+                <img src="https://res.cloudinary.com/dway4iqeh/image/upload/v1766758564/nexcore3_uvo6ca.png" alt="Logo" class="h-16 w-auto grayscale opacity-50 transition-all hover:grayscale-0 hover:opacity-100">
+                <div class="flex items-center gap-2 text-slate-500 font-semibold text-sm">
+                    <i class="fas fa-envelope text-orange-500"></i>
+                    <a href="mailto:nexcoretech@outlook.com" class="hover:text-blue-600 transition">nexcoretech@outlook.com</a>
+                </div>
+            </div>
+            <div class="flex gap-6 text-slate-400">
+                <a href="#" class="hover:text-blue-600 transition"><i class="fab fa-linkedin text-xl"></i></a>
+                <a href="#" class="hover:text-blue-600 transition"><i class="fab fa-instagram text-xl"></i></a>
+                <a href="#" class="hover:text-blue-600 transition"><i class="fas fa-lock text-xl"></i></a>
+            </div>
+            <div class="space-y-1">
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">Tecnología inteligente para empresas reales</p>
+                <p class="text-slate-300 text-[10px] uppercase font-bold tracking-widest">© 2024 INNOVA CORE TECH</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-view').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const target = document.getElementById(sectionId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            const subject = encodeURIComponent(`Consultoría Técnica: ${name}`);
+            const body = encodeURIComponent(`Nombre: ${name}\nEmail: ${email}\n\nRequerimiento:\n${message}`);
+            
+            // Envío vía Mailto
+            window.location.href = `mailto:nexcoretech@outlook.com?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
